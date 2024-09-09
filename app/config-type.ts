@@ -4,6 +4,7 @@ import { type Metadata } from "next"
 export type TIncubatorConfig = {
   appName: string
   hasAuth: boolean
+  hasHeader: boolean
   metadata: Metadata
   authedNavLinks: TNavLink[]
   navLinks: TNavLink[]

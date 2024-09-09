@@ -7,6 +7,7 @@ export default <TIncubatorConfig>{
       default: "Receipt Splitter",
     },
   },
+  hasHeader: true,
   navLinks: [],
   authedNavLinks: [
     {

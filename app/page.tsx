@@ -34,11 +34,13 @@ export default async function Home() {
     redirect
   ) : (
     <>
-      <Header
-        navLinks={navLinks}
-        user={user}
-        logo={logo()}
-      />
+      {config.hasHeader && (
+        <Header
+          navLinks={navLinks}
+          user={user}
+          logo={logo()}
+        />
+      )}
       <main>
         <HomeContent />
       </main>
