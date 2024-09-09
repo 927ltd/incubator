@@ -6,7 +6,8 @@ import "@/styles/tailwind.css"
 
 const APP = process.env.NEXT_PUBLIC_APP
 
-export const metadata: Metadata = require(`./(${APP})/config`).homeMetaData
+export const metadata: Metadata = require(`./(receipt_splitter)/config`).default
+  .metadata
 
 const inter = Inter({
   subsets: ["latin"],
