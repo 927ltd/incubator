@@ -16,6 +16,7 @@ import { User } from "@supabase/supabase-js"
 import { TNavLink } from "./Shared/types"
 import React from "react"
 import { createSBClient } from "@/utils/supabase-client"
+import { getConfig } from "@/app/utility"
 
 type THeaderProps = {
   navLinks?: TNavLink[]
@@ -137,6 +138,7 @@ function MobileNavigation(props: THeaderProps) {
 
 export function Header(props: THeaderProps) {
   const supabase = createSBClient()
+  const config = getConfig()
 
   return (
     <header
@@ -158,53 +160,56 @@ export function Header(props: THeaderProps) {
               ))}
             </div>
           </div>
+
           <div className="flex items-center gap-x-5 md:gap-x-8">
-            <div className="hidden md:block">
-              {props.user ? (
-                <div className="flex items-center gap-x-5 md:gap-x-8">
-                  <span>{props.user?.email}</span>
-                  <form
-                    action="#"
-                    className="grid grid-cols-1 gap-y-8"
-                  >
+            {config.hasAuth && (
+              <div className="hidden md:block">
+                {props.user ? (
+                  <div className="flex items-center gap-x-5 md:gap-x-8">
+                    <span>{props.user?.email}</span>
+                    <form
+                      action="#"
+                      className="grid grid-cols-1 gap-y-8"
+                    >
+                      <Button
+                        type="submit"
+                        variant="outline"
+                        className="w-full"
+                        data-testid="sign-out-button"
+                        formAction={() => {
+                          supabase.auth.signOut().then(() => {
+                            window.location.href = "/"
+                          })
+                        }}
+                      >
+                        <span>
+                          Sign out <span aria-hidden="true">&rarr;</span>
+                        </span>
+                      </Button>
+                    </form>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-x-5 md:gap-x-8">
+                    <div
+                      className="hidden md:block"
+                      data-testid="sign-in-link"
+                    >
+                      <NavLink href="/login">Sign in</NavLink>
+                    </div>
                     <Button
-                      type="submit"
-                      variant="outline"
-                      className="w-full"
-                      data-testid="sign-out-button"
-                      formAction={() => {
-                        supabase.auth.signOut().then(() => {
-                          window.location.href = "/"
-                        })
-                      }}
+                      href="/register"
+                      color="blue"
+                      data-testid="get-started-button"
                     >
                       <span>
-                        Sign out <span aria-hidden="true">&rarr;</span>
+                        Get started{" "}
+                        <span className="hidden lg:inline">today</span>
                       </span>
                     </Button>
-                  </form>
-                </div>
-              ) : (
-                <div className="flex items-center gap-x-5 md:gap-x-8">
-                  <div
-                    className="hidden md:block"
-                    data-testid="sign-in-link"
-                  >
-                    <NavLink href="/login">Sign in</NavLink>
                   </div>
-                  <Button
-                    href="/register"
-                    color="blue"
-                    data-testid="get-started-button"
-                  >
-                    <span>
-                      Get started{" "}
-                      <span className="hidden lg:inline">today</span>
-                    </span>
-                  </Button>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
             <div className="-mr-1 md:hidden">
               <MobileNavigation {...props} />
             </div>
