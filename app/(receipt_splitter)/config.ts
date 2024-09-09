@@ -1,21 +1,19 @@
-import { TNavLink } from "@/shared_components/Shared/types"
-import { type Metadata } from "next"
+import { TIncubatorConfig } from "../config-type"
 
-export const homeMetaData: Metadata = {
-  title: {
-    template: "%s - Receipt Splitter",
-    default: "Receipt Splitter",
+export default <TIncubatorConfig>{
+  metadata: {
+    title: {
+      template: "%s - Receipt Splitter",
+      default: "Receipt Splitter",
+    },
   },
-  description: "Split your receipts with ease.",
+  navLinks: [],
+  authedNavLinks: [
+    {
+      href: "/orders",
+      label: "Orders",
+    },
+  ],
+  appName: "Receipt Splitter",
+  hasAuth: true,
 }
-
-export const homeNavLinks: TNavLink[] = []
-
-export const authedNavLinks: TNavLink[] = [
-  {
-    href: "/orders",
-    label: "Orders",
-  },
-]
-
-export const appName = "Receipt Splitter"

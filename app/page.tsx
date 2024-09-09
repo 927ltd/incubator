@@ -1,34 +1,38 @@
 import { Footer } from "@/shared_components/Footer"
 import { Header } from "@/shared_components/Header"
 import { redirect } from "next/navigation"
-import { genLogoFunc } from "@/app/utility"
+import { getConfig, genLogoFunc } from "@/app/utility"
 import { TNavLink } from "@/shared_components/Shared/types"
 import { createSBClient } from "@/utils/supabase-client"
+import { User } from "@supabase/supabase-js"
+const APP = process.env.NEXT_PUBLIC_APP
 
-const app = process.env.NEXT_PUBLIC_APP
-
-const getHomeContent = async () => {
-  return import(`./(${app})/components/HomeContent`).then(mod => mod.default)
+const genHomeContent = async () => {
+  return import(`./(${APP})/components/HomeContent`).then(mod => mod.default)
 }
-const getHomeNavLinks = async () => {
-  return import(`./(${app})/config`).then(mod => mod.homeNavLinks)
+
+const genServerAuthedRedirect = async (user: User | null) => {
+  if (user) {
+    return redirect("/dashboard")
+  }
+  return null
 }
 
 export default async function Home() {
   "use server"
 
-  const supabase = createSBClient()
-
-  const user = (await supabase.auth.getUser()).data.user
-  if (user) {
-    return redirect("/dashboard")
-  }
-
-  const HomeContent = await getHomeContent()
-  const navLinks: TNavLink[] = await getHomeNavLinks()
+  const config = getConfig()
+  const HomeContent = await genHomeContent()
+  const navLinks: TNavLink[] = await config.navLinks // Access navLinks from the default export
   const logo = await genLogoFunc()
+  const supabase = createSBClient()
+  const user = (await supabase.auth.getUser()).data.user
+  console.log({ user })
+  const redirect = await genServerAuthedRedirect(user)
 
-  return (
+  return redirect ? (
+    redirect
+  ) : (
     <>
       <Header
         navLinks={navLinks}
