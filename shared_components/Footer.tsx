@@ -19,7 +19,6 @@ export function Footer(props: TFooterProps) {
     <footer className="bg-slate-50">
       <Container>
         <div className="py-16">
-          <div className="h-8 w-16">{props.logo}</div>
           <nav
             className="mt-10 text-sm"
             aria-label="quick links"
